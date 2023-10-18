@@ -1,4 +1,4 @@
-package com.mydoctor.recruitmentassignment.diagnosis;
+package com.mydoctor.recruitmentassignment.diagnosis.entity;
 
 public enum Status {
     APPLIED("진료 신청"),

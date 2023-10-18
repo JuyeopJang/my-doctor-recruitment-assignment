@@ -1,6 +1,6 @@
 package com.mydoctor.recruitmentassignment.doctor.entity;
 
-import com.mydoctor.recruitmentassignment.diagnosis.Diagnosis;
+import com.mydoctor.recruitmentassignment.diagnosis.entity.Diagnosis;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,12 +25,12 @@ public class Doctor {
     @Column
     private String hospital;
 
-    @OneToMany(mappedBy = "doctor")
+    @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
     private List<Diagnosis> diagnoses = new ArrayList<>();
 
-    @OneToMany(mappedBy = "doctor")
+    @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
     private List<ClinicService> clinicServices = new ArrayList<>();
 
-    @OneToMany(mappedBy = "doctor")
+    @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
     private List<OperatingHour> operatingHours = new ArrayList<>();
 }
