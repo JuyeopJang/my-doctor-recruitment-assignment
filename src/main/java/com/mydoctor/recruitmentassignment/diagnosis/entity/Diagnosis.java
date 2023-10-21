@@ -9,7 +9,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
 
@@ -25,7 +24,7 @@ public class Diagnosis {
     private Long id;
 
     @Column
-    private LocalDateTime requestedDateTime;
+    private LocalDateTime desiredDateTime;
 
     @Column
     private LocalDateTime expirationDateTime;
@@ -50,5 +49,41 @@ public class Diagnosis {
     public Diagnosis accept() {
         this.status = Status.ACCEPTED;
         return this;
+    }
+
+    private void setExpirationDateTime(LocalDateTime currDateTime) {
+        // 월 ~ 목 출근전
+        if (doctor.isBeforeWorking(currDateTime))
+            this.expirationDateTime =
+                    LocalDateTime.of(currDateTime.toLocalDate(), doctor.getOperatingHour(currDateTime).getStartTime().plusMinutes(15));
+
+        // 월 ~ 목 출근후
+        if (doctor.isAfterWorking(currDateTime))
+            this.expirationDateTime =
+                    LocalDateTime.of(currDateTime.toLocalDate().plusDays(1), doctor.getOperatingHour(currDateTime.plusDays(1)).getStartTime().plusMinutes(15));
+
+        // 영업일 당일 점심
+        if (doctor.isLunchTime(currDateTime))
+            this.expirationDateTime =
+                    LocalDateTime.of(currDateTime.toLocalDate(), doctor.getOperatingHour(currDateTime).getLunchEndTime().plusMinutes(15));
+
+        // 마지막 출근일 퇴근이후 ~ 영업일에 포함되지 않는 휴일
+        if (doctor.isHoliday(currDateTime))
+            this.expirationDateTime = doctor.calculateNextWorkingDateTime(currDateTime);
+    }
+
+    public static Diagnosis createDiagnosis(LocalDateTime desiredDateTime, Doctor doctor, Patient patient) {
+        // default +20 minute, else
+
+        Diagnosis diagnosis = Diagnosis.builder()
+                .desiredDateTime(desiredDateTime)
+                .status(Status.APPLIED)
+                .doctor(doctor)
+                .patient(patient)
+                .build();
+
+        diagnosis.setExpirationDateTime(LocalDateTime.now());
+
+        return diagnosis;
     }
 }

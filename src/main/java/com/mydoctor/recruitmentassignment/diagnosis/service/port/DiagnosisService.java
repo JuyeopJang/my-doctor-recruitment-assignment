@@ -1,5 +1,6 @@
 package com.mydoctor.recruitmentassignment.diagnosis.service.port;
 
+import com.mydoctor.recruitmentassignment.diagnosis.controller.dto.RequestDiagnosisInput;
 import com.mydoctor.recruitmentassignment.diagnosis.service.dto.DiagnosisOutput;
 
 import java.time.LocalDateTime;
@@ -10,4 +11,6 @@ public interface DiagnosisService {
     List<DiagnosisOutput> getDiagnosisRequestsToDoctor(Long doctorId);
 
     DiagnosisOutput updateDiagnosisStatus(Long diagnosisId, LocalDateTime currentDateTime);
+
+    DiagnosisOutput createDiagnosis(RequestDiagnosisInput requestDiagnosisInput);
 }

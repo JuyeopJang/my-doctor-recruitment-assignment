@@ -2,13 +2,14 @@ package com.mydoctor.recruitmentassignment.doctor.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.sql.Time;
 import java.time.DayOfWeek;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
-@Builder
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -19,16 +20,16 @@ public class OperatingHour {
     private Long id;
 
     @Column
-    private Time startTime;
+    private LocalTime startTime;
 
     @Column
-    private Time endTime;
+    private LocalTime endTime;
 
     @Column
-    private Time lunchStartTime;
+    private LocalTime lunchStartTime;
 
     @Column
-    private Time lunchEndTime;
+    private LocalTime lunchEndTime;
 
     @Column
     private DayOfWeek dayOfWeek;
@@ -36,4 +37,27 @@ public class OperatingHour {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "doctor_id")
     private Doctor doctor;
+
+    public Boolean isBeforeWorking(LocalTime currTime) {
+        if (currTime.isBefore(startTime)) return true;
+        return false;
+    }
+
+    public Boolean isAfterWorking(LocalTime currTime) {
+        if (currTime.isAfter(endTime)) return true;
+        return false;
+    }
+
+    public Boolean isLunch(LocalTime currTime) {
+        if (currTime.isBefore(lunchStartTime)) return false;
+        if (currTime.isAfter(lunchEndTime)) return false;
+        return true;
+    }
+
+    public Boolean isWorking(LocalTime currTime) {
+        if (isBeforeWorking(currTime)) return false;
+        if (isAfterWorking(currTime)) return false;
+        if (isLunch(currTime)) return false;
+        return true;
+    }
 }
