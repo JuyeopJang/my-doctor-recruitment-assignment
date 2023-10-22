@@ -43,9 +43,12 @@ public class DiagnosisServiceImpl implements DiagnosisService {
     @Override
     public DiagnosisOutput updateDiagnosisStatus(Long diagnosisId, LocalDateTime currentDateTime) {
         Diagnosis diagnosis = diagnosisRepository.findDiagnosisById(diagnosisId)
-                .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND))
-                .isAcceptable(currentDateTime)
-                .accept();
+                .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND, "존재하지 않는 진료 요청입니다."));
+
+        if (!diagnosis.isAcceptable(currentDateTime))
+            throw new BusinessException(ErrorCode.UNAUTHORIZED, "진료 요청이 만료되어 진료 요청을 수락할 수 없습니다.");
+
+        diagnosis.accept();
 
         return DiagnosisOutput.from(diagnosisRepository.save(diagnosis));
     }
@@ -54,13 +57,13 @@ public class DiagnosisServiceImpl implements DiagnosisService {
     @Override
     public DiagnosisOutput createDiagnosis(RequestDiagnosisInput requestDiagnosisInput) {
         Patient patient = patientRepository.findPatientById(requestDiagnosisInput.getPatientId())
-                .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND));
+                .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND, "존재하지 않는 환자입니다."));
 
         Doctor doctor = doctorRepository.findDoctorById(requestDiagnosisInput.getDoctorId())
-                .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND));
+                .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND, "존재하지 않는 의사입니다."));
 
         if (doctor.isBreakTime(requestDiagnosisInput.getDesiredDateTime()))
-            throw new BusinessException(ErrorCode.FORBIDDEN);
+            throw new BusinessException(ErrorCode.FORBIDDEN, "진료 희망시간이 의사의 영업시간이 아닙니다.");
 
         Diagnosis diagnosis = Diagnosis.createDiagnosis(requestDiagnosisInput.getDesiredDateTime(), doctor, patient);
 

@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.DayOfWeek;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Getter
@@ -32,7 +31,7 @@ public class OperatingHour {
     private LocalTime lunchEndTime;
 
     @Column
-    private DayOfWeek dayOfWeek;
+    private String dayOfWeek;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "doctor_id")
@@ -49,6 +48,7 @@ public class OperatingHour {
     }
 
     public Boolean isLunch(LocalTime currTime) {
+        if (lunchStartTime == null || lunchEndTime == null) return false;
         if (currTime.isBefore(lunchStartTime)) return false;
         if (currTime.isAfter(lunchEndTime)) return false;
         return true;
@@ -59,5 +59,15 @@ public class OperatingHour {
         if (isAfterWorking(currTime)) return false;
         if (isLunch(currTime)) return false;
         return true;
+    }
+
+    public Integer getPriority() {
+        if (dayOfWeek.equals(DayOfWeek.MONDAY.toString())) return Integer.valueOf(1);
+        if (dayOfWeek.equals(DayOfWeek.TUESDAY.toString())) return Integer.valueOf(2);
+        if (dayOfWeek.equals(DayOfWeek.WEDNESDAY.toString())) return Integer.valueOf(3);
+        if (dayOfWeek.equals(DayOfWeek.THURSDAY.toString())) return Integer.valueOf(4);
+        if (dayOfWeek.equals(DayOfWeek.FRIDAY.toString())) return Integer.valueOf(5);
+        if (dayOfWeek.equals(DayOfWeek.SATURDAY.toString())) return Integer.valueOf(6);
+        return Integer.valueOf(7);
     }
 }

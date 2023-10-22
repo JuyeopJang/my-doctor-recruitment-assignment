@@ -1,7 +1,5 @@
 package com.mydoctor.recruitmentassignment.diagnosis.entity;
 
-import com.mydoctor.recruitmentassignment.common.exception.BusinessException;
-import com.mydoctor.recruitmentassignment.common.exception.ErrorCode;
 import com.mydoctor.recruitmentassignment.doctor.entity.Doctor;
 import com.mydoctor.recruitmentassignment.patient.entity.Patient;
 import jakarta.persistence.*;
@@ -41,9 +39,9 @@ public class Diagnosis {
     @JoinColumn(name = "patient_id")
     private Patient patient;
 
-    public Diagnosis isAcceptable(LocalDateTime currentTime) {
-        if (currentTime.isAfter(expirationDateTime)) throw new BusinessException(ErrorCode.UNAUTHORIZED);
-        return this;
+    public Boolean isAcceptable(LocalDateTime currentTime) {
+        if (currentTime.isAfter(expirationDateTime)) return false;
+        return true;
     }
 
     public Diagnosis accept() {
@@ -52,29 +50,30 @@ public class Diagnosis {
     }
 
     private void setExpirationDateTime(LocalDateTime currDateTime) {
-        // 월 ~ 목 출근전
-        if (doctor.isBeforeWorking(currDateTime))
+        System.out.println(currDateTime);
+        if (doctor.isBeforeWorking(currDateTime)) {
             this.expirationDateTime =
                     LocalDateTime.of(currDateTime.toLocalDate(), doctor.getOperatingHour(currDateTime).getStartTime().plusMinutes(15));
-
-        // 월 ~ 목 출근후
-        if (doctor.isAfterWorking(currDateTime))
+            System.out.println(expirationDateTime);
+        } else if (doctor.isAfterWorking(currDateTime)) {
             this.expirationDateTime =
                     LocalDateTime.of(currDateTime.toLocalDate().plusDays(1), doctor.getOperatingHour(currDateTime.plusDays(1)).getStartTime().plusMinutes(15));
-
-        // 영업일 당일 점심
-        if (doctor.isLunchTime(currDateTime))
+            System.out.println(expirationDateTime);
+        } else if (doctor.isLunchTime(currDateTime)) {
             this.expirationDateTime =
                     LocalDateTime.of(currDateTime.toLocalDate(), doctor.getOperatingHour(currDateTime).getLunchEndTime().plusMinutes(15));
-
-        // 마지막 출근일 퇴근이후 ~ 영업일에 포함되지 않는 휴일
-        if (doctor.isHoliday(currDateTime))
+            System.out.println(expirationDateTime);
+        } else if (doctor.isHoliday(currDateTime)) {
             this.expirationDateTime = doctor.calculateNextWorkingDateTime(currDateTime);
+            System.out.println(expirationDateTime);
+        } else {
+            this.expirationDateTime =
+                    LocalDateTime.of(currDateTime.toLocalDate(), currDateTime.toLocalTime().plusMinutes(20));
+            System.out.println(expirationDateTime);
+        }
     }
 
     public static Diagnosis createDiagnosis(LocalDateTime desiredDateTime, Doctor doctor, Patient patient) {
-        // default +20 minute, else
-
         Diagnosis diagnosis = Diagnosis.builder()
                 .desiredDateTime(desiredDateTime)
                 .status(Status.APPLIED)

@@ -23,7 +23,7 @@ public class DiagnosisOutput {
         DiagnosisOutput diagnosisOutput = DiagnosisOutput.builder()
                 .diagnosisId(diagnosis.getId())
                 .patientName(diagnosis.getPatient().getName())
-                .desiredAppointmentDateTime(diagnosis.getRequestedDateTime())
+                .desiredAppointmentDateTime(diagnosis.getDesiredDateTime())
                 .expiredAppointmentDateTime(diagnosis.getExpirationDateTime())
                 .build();
 

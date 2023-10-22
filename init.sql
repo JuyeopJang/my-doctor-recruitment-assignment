@@ -1,0 +1,7 @@
+CREATE DATABASE my_doctor;
+
+CREATE USER 'user'@'%' IDENTIFIED BY '1234';
+
+GRANT ALL PRIVILEGES ON my_doctor.* TO 'user'@'%';
+
+FLUSH PRIVILEGES;

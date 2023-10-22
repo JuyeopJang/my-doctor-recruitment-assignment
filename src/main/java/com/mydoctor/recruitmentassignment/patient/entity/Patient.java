@@ -24,6 +24,7 @@ public class Patient {
     @Column
     private String name;
 
+    @Builder.Default
     @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY)
     private List<Diagnosis> diagnoses = new ArrayList<>();
 }

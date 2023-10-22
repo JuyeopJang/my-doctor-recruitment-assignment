@@ -12,9 +12,9 @@ public interface DiagnosisRepository extends JpaRepository<Diagnosis, Long> {
 
     Optional<Diagnosis> findDiagnosisById(Long diagnosisId);
 
-    @Query("select d from Diagnosis d "
-        + "join fetch d.doctor "
-        + "join fetch d.patient where d.id = :doctorId and d.status = 'APPLIED'"
+    @Query("select ds from Diagnosis ds "
+        + "join fetch ds.doctor "
+        + "join fetch ds.patient where ds.doctor.id = :doctorId and ds.status = 'APPLIED'"
     )
     Optional<List<Diagnosis>> findAllByStatusIsApplied(@Param("doctorId") Long doctorId);
 }

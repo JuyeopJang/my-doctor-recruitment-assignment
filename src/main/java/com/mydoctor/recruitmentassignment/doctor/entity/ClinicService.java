@@ -15,12 +15,11 @@ public class ClinicService {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Enumerated(EnumType.STRING)
     @Column
-    private Discipline discipline;
+    private String discipline;
 
     @Column
-    private Boolean isNonBenefit;
+    private Integer isNonBenefit;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "doctor_id")
