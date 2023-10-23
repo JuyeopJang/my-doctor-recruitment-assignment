@@ -50,8 +50,7 @@ http://localhost:8080/swagger-ui/index.html
    - 4.1 진료 요청시에 기록한 진료 만료 시간과 수락하는 시점의 시간을 비교해 수락 시점의 시간이 만료 시간 이후라면 수락이 불가능하도록 예외 처리를 적용한다.
   
 ## ERD 설계
-<img width="834" alt="스크린샷 2023-10-23 오후 4 17 14" src="https://github.com/JuyeopJang/my-doctor-recruitment-assignment/assets/68889506/fd54d574-b826-4e63-87c3-5d2264555ff4">
-
+<img width="834" alt="스크린샷 2023-10-23 오후 4 17 14" src="https://github.com/JuyeopJang/my-doctor-recruitment-assignment/assets/68889506/96b8ceb6-60b4-4973-bdd7-1404c74f3ee3">
 
 ## 미구현 기능 구현 계획
 - 의사 검색
