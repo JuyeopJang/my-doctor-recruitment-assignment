@@ -5,10 +5,35 @@ git clone https://github.com/JuyeopJang/my-doctor-recruitment-assignment.git
 ```shell
 cd ./my-doctor-recruitment-assignment
 ```
+! docker desktop 또는 cli를 통해 docker를 먼저 실행합니다.
 ```shell
-// Docker Desktop 또는 CLI를 통해 Docker를 먼저 실행합니다.
 docker compose up --build -d
 ```
+! spring app, mysql db가 모두 컨테이너화되었더라도 app과 db 연동 및 db 스키마 생성, 데이터 초기화 등의 작업으로 실제 애플리케이션이 동작하는 데엔 약간의 지연이 있을 수 있습니다.
+
+## 초기 데이터 및 DB 환경
+- 환자
+  - id: 1, name: 손흥민
+  - id: 2, name: 이강인
+  - id: 3, name: 황희찬
+- 의사
+  - id: 1, name: 손웅래, hospital: 메라키병원
+       - 진료과: 정형외과, 내과, 일반의
+       - 비급여진료과: 없음
+       - 영업시간: 월 ~ 금 09:00 ~ 19:00, 점심시간 11:00 ~ 12:00
+         - 휴무일 근무: 없음
+  - id: 2, name: 선재원, hospital: 메라키병원
+       - 진료과: 한의사, 일반의
+       - 비급여진료과: 다이어트약
+       - 영업시간: 월 ~ 금 08:00 ~ 17:00, 점심시간 12:00 ~ 13:00
+         - 휴무일 근무: 토 08:00 ~ 13:00
+- db 환경
+  - dbms: mysql
+  - username: user
+  - password: 1234
+  - url: jdbc:mysql://mysql-db:3306/my_doctor
+  - database: my_doctor
+
 ## API 스펙
 http://localhost:8080/swagger-ui/index.html
 
