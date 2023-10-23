@@ -6,6 +6,7 @@ git clone https://github.com/JuyeopJang/my-doctor-recruitment-assignment.git
 cd ./my-doctor-recruitment-assignment
 ```
 ```shell
+// Docker Desktop 또는 CLI를 통해 Docker를 먼저 실행합니다.
 docker compose up --build -d
 ```
 ## API 스펙
